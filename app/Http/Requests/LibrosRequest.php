@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class LibroRequest extends FormRequest
+class LibrosRequest extends FormRequest
 {
     public function authorize(): bool
     {

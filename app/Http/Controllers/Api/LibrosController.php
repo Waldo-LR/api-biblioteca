@@ -40,7 +40,7 @@ class LibrosController extends Controller
         return new LibrosResource($libro);
     }
 
-    public function destroy(LibrosPolicy $libro): JsonResponse
+    public function destroy(Libros $libro): JsonResponse
     {
         $libro->delete();
         return response()->json(['message' => 'Libro eliminado con éxito.'], 200);

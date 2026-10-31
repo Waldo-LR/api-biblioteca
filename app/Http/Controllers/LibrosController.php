@@ -2,65 +2,41 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Libros;
 use App\Http\Requests\StoreLibrosRequest;
 use App\Http\Requests\UpdateLibrosRequest;
+use App\Models\Libros;
+use Illuminate\Http\JsonResponse;
 
 class LibrosController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return response()->json(Libros::with('autor')->get());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(StoreLibrosRequest $request): JsonResponse
     {
-        //
+        $libro = Libros::create($request->validated());
+
+        return response()->json($libro->load('autor'), 201);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreLibrosRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
     public function show(Libros $libros)
     {
-        //
+        return response()->json($libros->load('autor'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Libros $libros)
+    public function update(UpdateLibrosRequest $request, Libros $libros): JsonResponse
     {
-        //
+        $libros->update($request->validated());
+
+        return response()->json($libros->fresh()->load('autor'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateLibrosRequest $request, Libros $libros)
+    public function destroy(Libros $libros): JsonResponse
     {
-        //
-    }
+        $libros->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Libros $libros)
-    {
-        //
+        return response()->json(['message' => 'Libro eliminado con éxito.'], 200);
     }
 }
