@@ -3,48 +3,46 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LibrosRequest;
+use App\Http\Resources\LibrosResource;
 use App\Models\Libros;
-use Illuminate\Http\Request;
+use App\Policies\LibrosPolicy;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class LibrosController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(): AnonymousResourceCollection
     {
-        //
+        $libros = Libros::with('autor')->get();
+        return LibrosResource::collection($libros);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(LibrosRequest $request): JsonResponse
     {
-        //
+        $libro = Libros::create($request->validated());
+        $libro->load('autor');
+        return (new LibrosResource($libro))
+            ->response()
+            ->setStatusCode(201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Libros $libros)
+    public function show(Libros $libro): LibrosResource
     {
-        //
+        $libro->load('autor');
+        return new LibrosResource($libro);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Libros $libros)
+    public function update(LibrosRequest $request, Libros $libro): LibrosResource
     {
-        //
+        $libro->update($request->validated());
+        $libro->load('autor');
+        return new LibrosResource($libro);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Libros $libros)
+    public function destroy(LibrosPolicy $libro): JsonResponse
     {
-        //
+        $libro->delete();
+        return response()->json(['message' => 'Libro eliminado con éxito.'], 200);
     }
 }

@@ -3,48 +3,50 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AutoresRequest;
+use App\Http\Resources\AutoresResource;
+use App\Http\Resources\LibrosResource;
 use App\Models\Autores;
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class AutoresController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(): AnonymousResourceCollection
     {
-        //
+        $autores = Autores::all();
+        return AutoresResource::collection($autores);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(AutoresRequest $request): JsonResponse
     {
-        //
+        $autor = Autores::create($request->validated());
+        return (new AutoresResource($autor))
+            ->response()
+            ->setStatusCode(201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Autores $autores)
+    public function show(Autores $autore): AutoresResource
     {
-        //
+        return new AutoresResource($autore);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Autores $autores)
+    public function update(AutoresRequest $request, Autores $autore): AutoresResource
     {
-        //
+        $autore->update($request->validated());
+        return new AutoresResource($autore);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Autores $autores)
+    public function destroy(Autores $autore): JsonResponse
     {
-        //
+        $autore->delete();
+        return response()->json(['message' => 'Autor eliminado con éxito.'], 200);
+    }
+
+    public function obtenerLibros(Autores $autore): AnonymousResourceCollection
+    {
+        // Eager loading de la relación libros
+        $autore->load('libros');
+        return LibrosResource::collection($autore->libros);
     }
 }

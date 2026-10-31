@@ -1,8 +1,11 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\AutoresController;
+use App\Http\Controllers\Api\LibrosController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+Route::apiResource('autores', AutoresController::class);
+Route::apiResource('libros', LibrosController::class);
+
+// Endpoint personalizado para obtener libros de un autor con eager loading
+Route::get('autores/{autore}/libros', [AutoresController::class, 'obtenerLibros']);
