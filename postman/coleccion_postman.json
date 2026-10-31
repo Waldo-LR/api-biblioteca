@@ -1,0 +1,60 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Coleccion_Postman",
+    "version": "1.0.0",
+    "description": ""
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:8000"
+    }
+  ],
+  "paths": {
+    "/api/libros": {
+      "post": {
+        "summary": "1.- Creación de un libro",
+        "responses": {},
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "autor_id": {
+                    "type": "integer"
+                  },
+                  "titulo": {
+                    "type": "string"
+                  },
+                  "isbn": {
+                    "type": "string"
+                  },
+                  "anio_publicacion": {
+                    "type": "integer"
+                  },
+                  "precio": {
+                    "type": "integer"
+                  }
+                }
+              },
+              "example": {
+                "autor_id": 1,
+                "titulo": "El Otoño del Patriarca",
+                "isbn": "978-0307474799",
+                "anio_publicacion": 1975,
+                "precio": 35
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/autores/1/libros": {
+      "get": {
+        "summary": "3.- Endpoint GET /api/autores/{id}/libros",
+        "responses": {}
+      }
+    }
+  }
+}
